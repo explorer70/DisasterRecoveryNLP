@@ -138,7 +138,7 @@ def build_model():
 
 def evaluate_model(model, X_test, Y_test, category_names):
     predictions = model.predict(X_test)
-    print(classification_report(y_test, predictions, target_names=category_names))
+    print(classification_report(Y_test, predictions, target_names=category_names))
     return
 
 def save_model(model, model_filepath):
