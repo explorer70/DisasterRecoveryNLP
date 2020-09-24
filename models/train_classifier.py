@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
-
 import sys
 
 import pandas as pd
@@ -39,19 +33,11 @@ nltk.download('wordnet')
 nltk.download('averaged_perceptron_tagger')
 
 
-def merge_low_count_ctg(df, threshold):
-    col_sizes = {}
-    cols_to_merge = []
-    for col in df.columns:
-        col_sizes[col]=df[col].sum()
-        if (df[col].sum()<1500): cols_to_merge.append(col)
-    df['other'] = df[cols_to_merge].sum(axis=1)
-    df.drop(cols_to_merge, axis=1, inplace=True)
-    df['other']=df['other'].apply(lambda x: 1 if x> 0 else x)
-    return df
 
 def load_data(database_filepath):
-    # load data from database
+    '''The functions loads data from sqlite database providd the path
+    It returns the features X, labels Y and the label names.'''
+    
     engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql("select * from Messages", engine)
     print ('Loaded: ', df.shape)
@@ -59,12 +45,10 @@ def load_data(database_filepath):
     df = df[df['cat_num']>0]
     X = df['message']
     Y = df.iloc[:, 4:-1]
-    # optional - consolidate low counts categories to improve accuracy
-    Y = merge_low_count_ctg(Y, 1500)
     return X, Y, Y.columns
 
 def tokenize(text):
-'''The function will remove punctuation, normalize the text case, lemmatize and remove the stop words'''
+    '''The function will remove punctuation, normalize the text case, lemmatize and remove the stop words'''
     stop_words = stopwords.words("english")
     lemmatizer = WordNetLemmatizer()
     # normalize case and remove punctuation
@@ -119,6 +103,7 @@ class POSCounter(BaseEstimator, TransformerMixin):
 
 
 def build_model():
+    '''The function returns  a pipeline containing a model defition.'''
     pipeline_mlp = Pipeline([
         ('features', FeatureUnion([
 
@@ -137,11 +122,14 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    ''' Evaluate Multioutput claffication results and print out the metrics.'''
+    
     predictions = model.predict(X_test)
     print(classification_report(Y_test, predictions, target_names=category_names))
     return
 
 def save_model(model, model_filepath):
+    '''Saves the model into a pickle file provided.'''
     pickle.dump(model, open(model_filepath, 'wb'))
 
 
@@ -167,9 +155,11 @@ def main():
         print('Trained model saved!')
 
     else:
-        print('Please provide the filepath of the disaster messages database '              'as the first argument and the filepath of the pickle file to '              'save the model to as the second argument. \n\nExample: python '              'train_classifier.py ../data/DisasterResponse.db classifier.pkl')
+        print('Please provide the filepath of the disaster messages database '\
+              'as the first argument and the filepath of the pickle file to '\
+              'save the model to as the second argument. \n\nExample: python '\
+              'train_classifier.py ../data/DisasterResponse.db classifier.pkl')
 
 
 if __name__ == '__main__':
     main()
-
