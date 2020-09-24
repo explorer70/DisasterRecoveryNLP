@@ -11,19 +11,19 @@ The objective of the project is to build a NLP based classification of the disas
 
 ### 2. File Descriptions
 
-app - directory contains web app code and templates
-app/templates
-app/templates/go.html
-app/templates/master.html
-app/run.py - code to start and run web application
+- app - directory contains web app code and templates 
+- app/templates 
+- app/templates/go.html
+- app/templates/master.html
+- app/run.py - code to start and run web application
 
-data - directory contains data and MLE trainig pipeline
-data/categories.csv - trainig and testing data for categories
-data/messages.csv - training and testing data for messages
-data/process_data.py - ETL pipeline that cleans data and stores in a sqlight database
+- data - directory contains data and MLE trainig pipeline
+- data/categories.csv - trainig and testing data for categories
+- data/messages.csv - training and testing data for messages
+- data/process_data.py - ETL pipeline that cleans data and stores in a sqlight database
 
-models - directory contains training code
-models/train_classifier.py - training code that loads the data pre-processed in the previous step and produces classification model
+- models - directory contains training code
+- models/train_classifier.py - training code that loads the data pre-processed in the previous step and produces classification model
 
 ### 3. How to Interact with the Project
 
